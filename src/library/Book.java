@@ -1,40 +1,32 @@
 package library;
 
+import datastructures.queues.CustomQueue;
+
 public class Book {
     private String title;
     private String author;
     private String isbn;
     private boolean isAvailable;
-
-    // TODO: Define a data structure to hold members waiting for this book
+    private CustomQueue<Member> waitList;
 
     public Book(String title, String author, String isbn) {
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
+        setTitle(title);
+        setAuthor(author);
+        setIsbn(isbn);
         this.isAvailable = true;
-
-        // TODO: Initialize your data structure here
+        waitList = new CustomQueue<>(200);
     }
 
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-    public String getIsbn() { return isbn; }
-    public boolean isAvailable() { return isAvailable; }
-    public void setAvailable(boolean available) { isAvailable = available; }
-
     public void addToWaitlist(Member member) {
-        // TODO
+        waitList.add(member);
     }
 
     public Member getNextInWaitlist() {
-        // TODO
-        return null;
+        return waitList.poll();
     }
 
     public boolean hasWaitlist() {
-        // TODO
-        return false;
+        return !waitList.isEmpty();
     }
 
     @Override
@@ -46,4 +38,54 @@ public class Book {
                 ", available=" + isAvailable +
                 '}';
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty");
+        }
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        if (author == null || author.isEmpty()) {
+            throw new IllegalArgumentException("Author cannot be null or empty");
+        }
+        this.author = author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty");
+        }
+        this.isbn = isbn;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public CustomQueue<Member> getWaitList() {
+        return waitList;
+    }
+
+    public void setWaitList(CustomQueue<Member> waitList) {
+        this.waitList = waitList;
+    }
+
 }
