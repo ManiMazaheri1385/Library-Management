@@ -18,28 +18,38 @@ public class CustomLinkedList<T> implements LinkedList<T> {
     }
 
     public CustomLinkedList() {
-        head = new Node<T>(null);
+        head = null;
+        tail = null;
     }
 
     @Override
     public void addFirst(T t) {
         Node<T> newNode = new Node<>(t);
-        newNode.next = head;
-        head.prev = newNode;
+        if (head != null) {
+            newNode.next = head;
+            head.prev = newNode;
+        }
+        else {
+            tail = newNode;
+        }
+        head = newNode;
         size++;
     }
 
     @Override
     public void addLast(T t) {
-        Node<T> current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
         Node<T> newNode = new Node<>(t);
-        current.next = newNode;
-        newNode.prev = current;
+        if (tail == null) {
+            head = tail = newNode;
+        }
+        else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
         size++;
     }
+
 
     @Override
     public T removeFirst() {
@@ -48,7 +58,12 @@ public class CustomLinkedList<T> implements LinkedList<T> {
         }
         T data = head.data;
         head = head.next;
-        head.prev = null;
+        if (head != null) {
+            head.prev = null;
+        }
+        else {
+            tail = null;
+        }
         size--;
         return data;
     }
@@ -58,16 +73,17 @@ public class CustomLinkedList<T> implements LinkedList<T> {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Node<T> current = head;
-        while (current.next != null) {
-            current = current.next;
+        T data = tail.data;
+        tail = tail.prev;
+        if (tail != null) {
+            tail.next = null;
+        } else {
+            head = null;
         }
-        T data = current.data;
-        current = current.prev;
-        current.next = null;
         size--;
         return data;
     }
+
 
     @Override
     public T getFirst() {
@@ -82,17 +98,14 @@ public class CustomLinkedList<T> implements LinkedList<T> {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Node<T> current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
-        return current.data;
+        return tail.data;
     }
+
 
     @Override
     public void clear() {
-        head.data = null;
-        head.next = null;
+        head = null;
+        tail = null;
         size = 0;
     }
 
@@ -133,14 +146,16 @@ public class CustomLinkedList<T> implements LinkedList<T> {
 
     @Override
     public boolean add(Object object) {
-        Node<T> current = head;
-        while (current.next != null) {
-            current = current.next;
-        }
         T data = (T) object;
         Node<T> newNode = new Node<>(data);
-        current.next = newNode;
-        newNode.prev = current;
+        if (isEmpty()) {
+            head = tail = newNode;
+        }
+        else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
         size++;
         return true;
     }
@@ -148,7 +163,7 @@ public class CustomLinkedList<T> implements LinkedList<T> {
     @Override
     public boolean contains(Object o) {
         Node<T> current = head;
-        while (current.next != null) {
+        while (current != null) {
             if (current.data.equals(o)) {
                 return true;
             }
@@ -160,10 +175,17 @@ public class CustomLinkedList<T> implements LinkedList<T> {
     @Override
     public boolean remove(Object o) {
         Node<T> current = head;
-        while (current.next != null) {
+        while (current != null) {
             if (current.data.equals(o)) {
-                current.next = current.next.next;
-                size--;
+                if (current == head) {
+                    removeFirst();
+                } else if (current == tail) {
+                    removeLast();
+                } else {
+                    current.prev.next = current.next;
+                    current.next.prev = current.prev;
+                    size--;
+                }
                 return true;
             }
             current = current.next;
