@@ -23,7 +23,7 @@ public class BookManager {
     }
 
     public boolean isBookAvailable(String isbn) {
-        return books.containsKey(isbn);
+        return books.get(isbn).isAvailable();
     }
 
     public void setBookAvailability(String isbn, boolean available) {
@@ -35,9 +35,7 @@ public class BookManager {
     }
 
     public Member getNextFromWaitlist(String isbn) {
-        Book book = getBookByIsbn(isbn);
-        book.setAvailable(true);
-        return book.getNextInWaitlist();
+        return getBookByIsbn(isbn).getNextInWaitlist();
     }
 
     public boolean hasWaitlist(String isbn) {
