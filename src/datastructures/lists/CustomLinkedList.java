@@ -131,8 +131,9 @@ public class CustomLinkedList<T> implements LinkedList<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
+        T oldElement = current.data;
         current.data = (T) element;
-        return current.data;
+        return oldElement;
     }
 
     @Override

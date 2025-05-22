@@ -32,8 +32,9 @@ public class CustomArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
+        T oldElement = (T) elements[index];
         elements[index] = element;
-        return element;
+        return oldElement;
     }
 
     @Override
